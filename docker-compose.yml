@@ -1,0 +1,39 @@
+version: '3'
+
+services:
+  frontend:
+    build: 
+      context: .
+      dockerfile: ./.docker/node.dockerfile
+    volumes:
+      - "./:/var/www"
+    ports:
+      - '3000:3000'
+    depends_on: 
+      - 'db'
+    networks:
+      - simple-network
+    #restart: on-failure
+    tty: true
+
+
+  db:
+    image: mysql:5.7
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - simple-network
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: P@ssw0rd
+      MYSQL_DATABASE: simple_db
+      MYSQL_USER: simple_usr
+      MYSQL_PASSWORD: P@ssw0rd
+
+
+networks:
+  simple-network:
+    driver: bridge
+
+volumes:
+  db_data:
